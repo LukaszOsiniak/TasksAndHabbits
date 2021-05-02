@@ -1,0 +1,6 @@
+CREATE TABLE tasks (
+    name TEXT NOT NULL,
+    status TEXT CHECK(status in( 'COMPLETE', 'DEFINED', 'DELETED')) NOT NULL,
+    id INTEGER PRIMARY KEY
+    )
+    WITHOUT ROWID;
