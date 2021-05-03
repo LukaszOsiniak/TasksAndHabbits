@@ -12,10 +12,16 @@ test {
 sourceSets {
     main {
         java {
-            srcDirs("src")
+            srcDir 'src/main/java'
         }
         resources {
-            srcDir 'resources'
+            srcDir 'src/resources'
+        }
+    }
+
+    test {
+        java {
+            srcDir 'src/test/java'
         }
     }
 }
