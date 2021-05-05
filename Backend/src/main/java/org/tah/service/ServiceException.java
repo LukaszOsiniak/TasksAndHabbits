@@ -5,6 +5,10 @@ public class ServiceException extends RuntimeException {
         super(msg);
     }
 
+    public ServiceException(Throwable throwing) {
+        super(throwing);
+    }
+
     public ServiceException(String msg, Throwable throwing) {
         super(msg, throwing);
     }

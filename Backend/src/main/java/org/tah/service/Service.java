@@ -46,6 +46,13 @@ public class Service {
         return taskFromDb;
     }
 
+    public Boolean queryDeletedTask(int id) throws SQLException {
+        if (taskDAO.getTask(id) != null) {
+            return false;
+        }
+        return true;
+    }
+
     private void validateTaskWhenAdding(Task task) {
         boolean isValid = true;
 
