@@ -33,9 +33,6 @@ public abstract class IntegrationTestBase {
             LOG.info(sqlScriptContent);
 
             statement.executeUpdate(sqlScriptContent);
-            TaskStatusEnum e = TaskStatusEnum.DEFINED;
-            TaskStatusEnum.valueOf("DEFINED");
-            TaskStatusEnum.values();
         }
     }
 }

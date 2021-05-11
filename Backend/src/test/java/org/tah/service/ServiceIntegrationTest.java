@@ -7,7 +7,8 @@ import org.tah.service.test.util.IntegrationTestBase;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ServiceIntegrationTest extends IntegrationTestBase {
 
@@ -55,7 +56,6 @@ class ServiceIntegrationTest extends IntegrationTestBase {
         //when
         service.deleteTask(task);
         Task deletedTask = service.getTask(2);
-        System.out.println(deletedTask);
         //then
         assertNull(deletedTask);
     }

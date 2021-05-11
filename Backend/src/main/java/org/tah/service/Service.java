@@ -36,7 +36,7 @@ public class Service {
         }
     }
 
-    public Task getTask(int id)  {
+    public Task getTask(int id) {
         Task taskFromDb;
         try {
             taskFromDb = taskDAO.getTask(id);
@@ -44,13 +44,6 @@ public class Service {
             throw new ServiceException("Failed to query.", e);
         }
         return taskFromDb;
-    }
-
-    public Boolean queryDeletedTask(int id) throws SQLException {
-        if (taskDAO.getTask(id) != null) {
-            return false;
-        }
-        return true;
     }
 
     private void validateTaskWhenAdding(Task task) throws ValidationException {
