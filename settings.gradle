@@ -1,3 +1,4 @@
 rootProject.name = 'TasksAndHabbits'
 include 'Backend'
+include 'Frontend'
 

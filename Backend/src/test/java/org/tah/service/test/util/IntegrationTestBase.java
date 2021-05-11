@@ -2,6 +2,7 @@ package org.tah.service.test.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tah.model.TaskStatusEnum;
 import org.tah.persistence.DbConnection;
 
 import java.io.BufferedReader;
@@ -32,6 +33,9 @@ public abstract class IntegrationTestBase {
             LOG.info(sqlScriptContent);
 
             statement.executeUpdate(sqlScriptContent);
+            TaskStatusEnum e = TaskStatusEnum.DEFINED;
+            TaskStatusEnum.valueOf("DEFINED");
+            TaskStatusEnum.values();
         }
     }
 }

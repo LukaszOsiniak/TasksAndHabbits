@@ -7,8 +7,7 @@ import org.tah.service.test.util.IntegrationTestBase;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ServiceIntegrationTest extends IntegrationTestBase {
 
@@ -23,7 +22,7 @@ class ServiceIntegrationTest extends IntegrationTestBase {
         taskOne.setTaskId(1);
         //when
         service.addTask(taskOne);
-        Task taskInDB = service.query(1);
+        Task taskInDB = service.getTask(1);
         //then
         assertEquals(taskInDB.getName(), taskOne.getName());
         assertEquals(taskInDB.getStatus(), taskOne.getStatus());
@@ -33,14 +32,14 @@ class ServiceIntegrationTest extends IntegrationTestBase {
     @Test
     public void shouldUpdateTask() throws SQLException {
         //given
+        runSqlDataloadScript("/dataload/insertTask.sql");
         Task task = new Task();
         task.setName("Updated task");
         task.setStatus(TaskStatusEnum.COMPLETE);
         task.setTaskId(2);
-        runSqlDataloadScript("/dataload/insertTask.sql");
         //when
         service.updateTask(task);
-        Task updatedTask = service.query(2);
+        Task updatedTask = service.getTask(2);
         //then
         assertEquals(updatedTask.getName(), task.getName());
         assertEquals(updatedTask.getStatus(), task.getStatus());
@@ -50,14 +49,14 @@ class ServiceIntegrationTest extends IntegrationTestBase {
     @Test
     public void shouldDeleteTask() throws SQLException {
         //given
+        runSqlDataloadScript("/dataload/insertTask.sql");
         Task task = new Task();
         task.setTaskId(2);
-        runSqlDataloadScript("/dataload/insertTask.sql");
         //when
         service.deleteTask(task);
-        Boolean deletedTask = service.queryDeletedTask(2);
+        Task deletedTask = service.getTask(2);
         System.out.println(deletedTask);
         //then
-        assertTrue(deletedTask);
+        assertNull(deletedTask);
     }
 }

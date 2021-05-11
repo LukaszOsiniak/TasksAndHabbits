@@ -36,7 +36,7 @@ public class Service {
         }
     }
 
-    public Task query(int id) {
+    public Task getTask(int id)  {
         Task taskFromDb;
         try {
             taskFromDb = taskDAO.getTask(id);
@@ -53,7 +53,7 @@ public class Service {
         return true;
     }
 
-    private void validateTaskWhenAdding(Task task) {
+    private void validateTaskWhenAdding(Task task) throws ValidationException {
         boolean isValid = true;
 
         if (task.getName() == null || task.getName().length() < 3) {
@@ -65,7 +65,7 @@ public class Service {
         }
 
         if (!isValid) {
-            throw new RuntimeException("Task to be added is not valid");
+            throw new ValidationException("Task to be added is not valid");
         }
     }
 
@@ -81,7 +81,7 @@ public class Service {
         }
 
         if (!isValid) {
-            throw new RuntimeException("Task to be updated is not valid");
+            throw new ValidationException("Task to be updated is not valid");
         }
     }
 }
