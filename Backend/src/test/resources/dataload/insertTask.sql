@@ -1,0 +1,1 @@
+INSERT INTO tasks (name, status, id) VALUES('New task two', 'COMPLETE', 2);
