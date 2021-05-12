@@ -2,3 +2,5 @@
 /.gradle/
 /Backend/build/
 /Backend/build/classes/java/main/
+/tahDB.db
+/.idea/
