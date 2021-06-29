@@ -1,19 +1,24 @@
 package org.tah.service;
 
+import org.springframework.stereotype.Component;
 import org.tah.model.Task;
 import org.tah.model.TaskStatusEnum;
 import org.tah.persistence.TaskDAO;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+@Component
 public class Service {
 
     private TaskDAO taskDAO = new TaskDAO();
 
-    public void addTask(Task task) {
+    public int addTask(Task task) {
         validateTaskWhenAdding(task);
         try {
             taskDAO.insert(task);
+            return task.getTaskId();
         } catch (SQLException e) {
             throw new ServiceException("Failed to insert a task", e);
         }
@@ -33,6 +38,14 @@ public class Service {
             taskDAO.delete(task);
         } catch (SQLException e) {
             throw new ServiceException("Failed to delete a task.", e);
+        }
+    }
+
+    public void deleteTaskById(int id) {
+        try {
+            taskDAO.deleteTaskById(id);
+        } catch (SQLException e) {
+            throw new ServiceException("Failed to delete a task", e);
         }
     }
 
@@ -76,5 +89,18 @@ public class Service {
         if (!isValid) {
             throw new ValidationException("Task to be updated is not valid");
         }
+    }
+
+    public List<Task> getAllTasks() {
+        List<Task> listOfTasks = new ArrayList<>();
+        try {
+            listOfTasks = taskDAO.getAllTasks();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < listOfTasks.size(); i++) {
+            System.out.println("task: " + listOfTasks.get(i).getName() + " " + listOfTasks.get(i).getStatus() + " " + listOfTasks.get(i).getTaskId());
+        }
+        return listOfTasks;
     }
 }

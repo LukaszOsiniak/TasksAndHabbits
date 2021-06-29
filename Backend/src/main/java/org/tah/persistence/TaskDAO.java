@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskDAO {
 
@@ -17,19 +19,29 @@ public class TaskDAO {
     private static final String UPDATE_SQL = "UPDATE tasks SET name = ? , status = ? WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM tasks WHERE id = ?";
     private static final String SELECT_SQL = "SELECT * FROM tasks WHERE id = ?";
+    private static final String SELECT_ALL_SQL = "SELECT * FROM tasks";
+    private static final String SELECT_MAX_ID = "SELECT MAX(id) FROM tasks";
+
 
     public void insert(Task task) throws SQLException {
         DbConnection dbConnection = new DbConnection();
 
         try (Connection connection = dbConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
+             PreparedStatement insertSt = connection.prepareStatement(INSERT_SQL);
+             PreparedStatement selectIdSt = connection.prepareStatement(SELECT_MAX_ID)) {
+
+            ResultSet rs = selectIdSt.executeQuery();
+            rs.next();
+            int newID = rs.getInt("MAX(id)") + 1;
 
             int ctr = 1;
-            statement.setString(ctr++, task.getName());
-            statement.setString(ctr++, task.getStatus().name());
-            statement.setInt(ctr, task.getTaskId());
-            int rowCount = statement.executeUpdate();
+            insertSt.setString(ctr++, task.getName());
+            insertSt.setString(ctr++, task.getStatus().name());
+            insertSt.setInt(ctr, newID);
+            int rowCount = insertSt.executeUpdate();
             LOG.info("Number of inserted rows: " + rowCount);
+
+            task.setTaskId(newID);
         } catch (SQLException e) {
             LOG.error("Failed when inserting a task.", e);
             throw e;
@@ -72,6 +84,23 @@ public class TaskDAO {
         }
     }
 
+    public void deleteTaskById(int deletedTaskId) throws SQLException {
+
+        DbConnection dbConnection = new DbConnection();
+
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
+
+            int ctr = 1;
+            statement.setInt(ctr, deletedTaskId);
+            statement.executeUpdate();
+            LOG.info("Task with id: " + deletedTaskId + " is deleted");
+        } catch (SQLException e) {
+            LOG.error("Failed when deleting a task.", e);
+            throw e;
+        }
+    }
+
     public Task getTask(int taskId) throws SQLException {
 
         DbConnection dbConnection = new DbConnection();
@@ -93,5 +122,27 @@ public class TaskDAO {
             throw e;
         }
         return task;
+    }
+
+    public List<Task> getAllTasks() throws SQLException {
+
+        DbConnection dbConnection = new DbConnection();
+        Task task = null;
+        List<Task> listOfAllTasks = new ArrayList<>();
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_SQL)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                task = new Task();
+                task.setName(rs.getString("name"));
+                task.setStatus(TaskStatusEnum.valueOf(rs.getString("status")));
+                task.setTaskId(rs.getInt("id"));
+                listOfAllTasks.add(task);
+            }
+        } catch (SQLException e) {
+            LOG.error("Failed to select all tasks.", e);
+            throw e;
+        }
+        return listOfAllTasks;
     }
 }
