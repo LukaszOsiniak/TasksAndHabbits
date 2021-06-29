@@ -41,6 +41,14 @@ public class Service {
         }
     }
 
+    public void deleteTaskById(int id) {
+        try {
+            taskDAO.deleteTaskById(id);
+        } catch (SQLException e) {
+            throw new ServiceException("Failed to delete a task", e);
+        }
+    }
+
     public Task getTask(int id) {
         Task taskFromDb;
         try {
@@ -85,7 +93,7 @@ public class Service {
 
     public List<Task> getAllTasks() {
         List<Task> listOfTasks = new ArrayList<>();
-        try{
+        try {
             listOfTasks = taskDAO.getAllTasks();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,6 +101,6 @@ public class Service {
         for (int i = 0; i < listOfTasks.size(); i++) {
             System.out.println("task: " + listOfTasks.get(i).getName() + " " + listOfTasks.get(i).getStatus() + " " + listOfTasks.get(i).getTaskId());
         }
-         return listOfTasks;
+        return listOfTasks;
     }
 }

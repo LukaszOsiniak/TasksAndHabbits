@@ -84,6 +84,23 @@ public class TaskDAO {
         }
     }
 
+    public void deleteTaskById(int deletedTaskId) throws SQLException {
+
+        DbConnection dbConnection = new DbConnection();
+
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
+
+            int ctr = 1;
+            statement.setInt(ctr, deletedTaskId);
+            statement.executeUpdate();
+            LOG.info("Task with id: " + deletedTaskId + " is deleted");
+        } catch (SQLException e) {
+            LOG.error("Failed when deleting a task.", e);
+            throw e;
+        }
+    }
+
     public Task getTask(int taskId) throws SQLException {
 
         DbConnection dbConnection = new DbConnection();
